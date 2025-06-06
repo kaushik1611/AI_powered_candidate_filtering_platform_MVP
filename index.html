@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Candidate Assessment Platform</title>
+    
+    <!-- Material Design Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts - Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fafafa;
+            color: #212121;
+            line-height: 1.5;
+        }
+
+        /* Material Design Color Palette */
+        :root {
+            --primary: #1976d2;
+            --primary-dark: #1565c0;
+            --primary-light: #42a5f5;
+            --secondary: #388e3c;
+            --secondary-dark: #2e7d32;
+            --accent: #ff5722;
+            --background: #fafafa;
+            --surface: #ffffff;
+            --error: #d32f2f;
+            --on-primary: #ffffff;
+            --on-surface: #212121;
+            --on-background: #212121;
+            --disabled: #9e9e9e;
+            --divider: #e0e0e0;
+        }
+
+        /* Material Design Elevation */
+        .elevation-1 { box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12); }
+        .elevation-2 { box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12); }
+        .elevation-4 { box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12); }
+        .elevation-8 { box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12); }
+
+        /* Material Design Components */
+        .material-card {
+            background: var(--surface);
+            border-radius: 4px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .material-button {
+            background: var(--primary);
+            color: var(--on-primary);
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 36px;
+        }
+
+        .material-button:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .material-button:disabled {
+            background: var(--disabled);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .material-button.outlined {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .material-button.outlined:hover {
+            background: rgba(25, 118, 210, 0.04);
+        }
+
+        .material-input {
+            width: 100%;
+            border: 1px solid var(--divider);
+            border-radius: 4px;
+            padding: 12px 16px;
+            font-size: 16px;
+            transition: border-color 0.2s ease;
+            background: var(--surface);
+        }
+
+        .material-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+        }
+
+        .material-textfield {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .material-textfield label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--on-surface);
+        }
+
+        /* Header */
+        .app-header {
+            background: var(--primary);
+            color: var(--on-primary);
+            padding: 16px 0;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-title h1 {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 24px;
+        }
+
+        .header-nav a {
+            color: var(--on-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .header-nav a:hover {
+            opacity: 0.8;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border-radius: 4px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.blue { background: rgba(25, 118, 210, 0.1); color: var(--primary); }
+        .stat-icon.green { background: rgba(56, 142, 60, 0.1); color: var(--secondary); }
+        .stat-icon.orange { background: rgba(255, 87, 34, 0.1); color: var(--accent); }
+        .stat-icon.purple { background: rgba(156, 39, 176, 0.1); color: #9c27b0; }
+
+        .stat-content h3 {
+            font-size: 32px;
+            font-weight: 400;
+            margin-bottom: 4px;
+        }
+
+        .stat-content p {
+            color: #757575;
+            font-size: 14px;
+        }
+
+        /* Upload Areas */
+        .upload-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .upload-section {
+            background: var(--surface);
+            border-radius: 4px;
+            padding: 24px;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--divider);
+            border-radius: 4px;
+            padding: 32px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fafafa;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--primary);
+            background: rgba(25, 118, 210, 0.04);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: var(--disabled);
+            margin-bottom: 16px;
+        }
+
+        .upload-area:hover .upload-icon {
+            color: var(--primary);
+        }
+
+        .upload-text {
+            font-size: 16px;
+            color: var(--on-surface);
+            margin-bottom: 8px;
+        }
+
+        .upload-subtext {
+            font-size: 14px;
+            color: #757575;
+        }
+
+        .file-selected {
+            margin-top: 12px;
+            padding: 8px 12px;
+            background: rgba(56, 142, 60, 0.1);
+            color: var(--secondary);
+            border-radius: 4px;
+            font-size: 14px;
+            display: none;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 24px 0;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--divider);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 12px;
+            color: #757575;
+            font-size: 14px;
+        }
+
+        /* Results Section */
+        .results-section {
+            background: var(--surface);
+            border-radius: 4px;
+            padding: 24px;
+            margin-bottom: 32px;
+            display: none;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .results-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 400;
+        }
+
+        .candidate-summary {
+            background: #f5f5f5;
+            border-radius: 4px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .summary-item h4 {
+            font-size: 14px;
+            color: #757575;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .summary-item p {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .score-large {
+            font-size: 32px !important;
+            color: var(--primary);
+        }
+
+        /* Score Bars */
+        .scores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .score-item {
+            background: #f5f5f5;
+            border-radius: 4px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .score-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .score-label {
+            font-weight: 500;
+        }
+
+        .score-value {
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .score-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--divider);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.6s ease;
+        }
+
+        /* Analysis Section */
+        .analysis-box {
+            background: rgba(25, 118, 210, 0.04);
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 0 4px 4px 0;
+            margin-bottom: 16px;
+        }
+
+        /* Strengths and Weaknesses */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .insight-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .insight-list {
+            list-style: none;
+        }
+
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--surface);
+        }
+
+        .data-table th {
+            background: #f5f5f5;
+            padding: 16px;
+            text-align: left;
+            font-weight: 500;
+            border-bottom: 1px solid var(--divider);
+        }
+
+        .data-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--divider);
+        }
+
+        .data-table tr:hover {
+            background: rgba(0,0,0,0.04);
+        }
+
+        .status-chip {
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-recommended {
+            background: rgba(56, 142, 60, 0.1);
+            color: var(--secondary);
+        }
+
+        .status-highly-recommended {
+            background: rgba(25, 118, 210, 0.1);
+            color: var(--primary);
+        }
+
+        .status-consider {
+            background: rgba(255, 87, 34, 0.1);
+            color: var(--accent);
+        }
+
+        /* Mobile Navigation */
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            color: var(--on-primary);
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .mobile-nav {
+            background: var(--primary-dark);
+            padding: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .mobile-nav a {
+            display: block;
+            color: var(--on-primary);
+            text-decoration: none;
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: background-color 0.2s ease;
+        }
+        
+        .mobile-nav a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        /* Show mobile menu button on small screens */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block !important;
+            }
+        }
+        
+        /* Base Mobile Styles (320px+) */
+        .header-content {
+            padding: 0 16px;
+        }
+        
+        .header-nav {
+            display: none;
+        }
+        
+        .main-container {
+            padding: 16px;
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .stat-card {
+            padding: 16px;
+            flex-direction: column;
+            text-align: center;
+            gap: 8px;
+        }
+        
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+        }
+        
+        .stat-content h3 {
+            font-size: 24px;
+        }
+        
+        .upload-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        
+        .upload-section {
+            padding: 16px;
+        }
+        
+        .upload-area {
+            padding: 24px 16px;
+        }
+        
+        .upload-icon {
+            font-size: 36px;
+        }
+        
+        .results-header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+        }
+        
+        .results-title {
+            font-size: 20px;
+        }
+        
+        .candidate-summary {
+            padding: 16px;
+        }
+        
+        .summary-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+            text-align: center;
+        }
+        
+        .scores-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        
+        .insights-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        
+        .material-card {
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .material-button {
+            width: 100%;
+            justify-content: center;
+            padding: 12px 16px;
+            font-size: 16px;
+            min-height: 48px;
+        }
+        
+        .data-table {
+            font-size: 14px;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 12px 8px;
+        }
+        
+        /* Responsive table visibility classes */
+        .desktop-only {
+            display: table-cell;
+        }
+        
+        .tablet-up {
+            display: table-cell;
+        }
+        
+        /* Mobile table adjustments */
+        @media (max-width: 480px) {
+            .desktop-only {
+                display: none;
+            }
+            
+            .tablet-up {
+                display: none;
+            }
+            
+            .data-table {
+                font-size: 12px;
+            }
+            
+            .status-chip {
+                font-size: 10px;
+                padding: 2px 8px;
+            }
+        }
+        
+        @media (min-width: 481px) and (max-width: 768px) {
+            .desktop-only {
+                display: none;
+            }
+        }
+        
+        /* Small Mobile (320px - 480px) */
+        @media (max-width: 480px) {
+            .header-title h1 {
+                font-size: 18px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-card {
+                flex-direction: row;
+                text-align: left;
+                gap: 12px;
+            }
+            
+            .upload-area {
+                padding: 20px 12px;
+            }
+            
+            .upload-text {
+                font-size: 14px;
+            }
+            
+            .upload-subtext {
+                font-size: 12px;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .material-input {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .insight-item {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+        
+        /* Remove desktop-specific table rules since we're using semantic classes */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .header-nav {
+                display: none;
+            }
+            
+            .main-container {
+                padding: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+            
+            .upload-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .summary-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        /* Tablet Landscape & Small Desktop (769px - 1024px) */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .header-nav {
+                display: flex;
+                gap: 16px;
+            }
+            
+            .header-nav a {
+                font-size: 14px;
+            }
+            
+            .main-container {
+                padding: 24px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .upload-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .material-button {
+                width: auto;
+            }
+        }
+        
+        /* Desktop (1025px+) */
+        @media (min-width: 1025px) {
+            .header-nav {
+                display: flex;
+                gap: 24px;
+            }
+            
+            .main-container {
+                padding: 32px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 24px;
+            }
+            
+            .stat-card {
+                flex-direction: row;
+                text-align: left;
+                padding: 24px;
+            }
+            
+            .upload-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 24px;
+            }
+            
+            .material-button {
+                width: auto;
+            }
+            
+            .results-header {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+        
+        /* Touch Optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .material-button,
+            .upload-area,
+            .stat-card {
+                min-height: 48px;
+            }
+            
+            .material-input {
+                padding: 16px;
+                font-size: 16px;
+            }
+            
+            .upload-area {
+                padding: 32px 16px;
+            }
+        }
+        
+        /* Landscape Mobile Optimization */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .header-content {
+                padding: 8px 16px;
+            }
+            
+            .main-container {
+                padding: 12px 16px;
+            }
+            
+            .material-card {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+            
+            .upload-area {
+                padding: 16px;
+            }
+            
+            .upload-icon {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+        }
+
+        /* Utilities */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mb-16 { margin-bottom: 16px; }
+        .mb-24 { margin-bottom: 24px; }
+        .mt-16 { margin-top: 16px; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header elevation-4">
+        <div class="header-content">
+            <div class="header-title">
+                <span class="material-icons">psychology</span>
+                <h1>AI Assessment</h1>
+            </div>
+            <nav class="header-nav">
+                <a href="#dashboard">Dashboard</a>
+                <a href="#assessments">Assessments</a>
+                <a href="#analytics">Analytics</a>
+            </nav>
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" style="display: none;">
+                <span class="material-icons">menu</span>
+            </button>
+        </div>
+        <!-- Mobile Navigation -->
+        <nav id="mobileNav" class="mobile-nav" style="display: none;">
+            <a href="#dashboard">Dashboard</a>
+            <a href="#assessments">Assessments</a>
+            <a href="#analytics">Analytics</a>
+            <a href="#settings">Settings</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card elevation-1">
+                <div class="stat-icon blue">
+                    <span class="material-icons">people</span>
+                </div>
+                <div class="stat-content">
+                    <h3 id="totalCandidates">0</h3>
+                    <p>Total Candidates</p>
+                </div>
+            </div>
+            <div class="stat-card elevation-1">
+                <div class="stat-icon green">
+                    <span class="material-icons">check_circle</span>
+                </div>
+                <div class="stat-content">
+                    <h3 id="assessedCandidates">0</h3>
+                    <p>Assessed</p>
+                </div>
+            </div>
+            <div class="stat-card elevation-1">
+                <div class="stat-icon orange">
+                    <span class="material-icons">schedule</span>
+                </div>
+                <div class="stat-content">
+                    <h3 id="pendingCandidates">0</h3>
+                    <p>Pending</p>
+                </div>
+            </div>
+            <div class="stat-card elevation-1">
+                <div class="stat-icon purple">
+                    <span class="material-icons">star</span>
+                </div>
+                <div class="stat-content">
+                    <h3 id="avgScore">0</h3>
+                    <p>Average Score</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Assessment Section -->
+        <div class="material-card elevation-2">
+            <div class="results-title mb-24">
+                <span class="material-icons">add_circle</span>
+                <span>New Candidate Assessment</span>
+            </div>
+
+            <!-- Upload Grid -->
+            <div class="upload-grid">
+                <!-- Role Profile -->
+                <div class="upload-section">
+                    <label class="material-textfield">
+                        <span>Role Profile</span>
+                        <div class="upload-area" onclick="document.getElementById('roleProfile').click()">
+                            <div class="upload-icon">
+                                <span class="material-icons">work</span>
+                            </div>
+                            <div class="upload-text">Click to upload role profile</div>
+                            <div class="upload-subtext">PDF, DOC, DOCX up to 10MB</div>
+                            <input type="file" id="roleProfile" class="hidden" accept=".pdf,.doc,.docx">
+                        </div>
+                        <div id="roleProfileSelected" class="file-selected"></div>
+                    </label>
+                </div>
+
+                <!-- Company Info -->
+                <div class="upload-section">
+                    <label class="material-textfield">
+                        <span>Company Information</span>
+                        <div class="upload-area" onclick="document.getElementById('companyInfo').click()">
+                            <div class="upload-icon">
+                                <span class="material-icons">business</span>
+                            </div>
+                            <div class="upload-text">Click to upload company info</div>
+                            <div class="upload-subtext">PDF, DOC, DOCX up to 10MB</div>
+                            <input type="file" id="companyInfo" class="hidden" accept=".pdf,.doc,.docx">
+                        </div>
+                        <div id="companyInfoSelected" class="file-selected"></div>
+                    </label>
+                </div>
+
+                <!-- Scoring Template -->
+                <div class="upload-section">
+                    <label class="material-textfield">
+                        <span>Scoring Template</span>
+                        <div class="upload-area" onclick="document.getElementById('scoringTemplate').click()">
+                            <div class="upload-icon">
+                                <span class="material-icons">assignment</span>
+                            </div>
+                            <div class="upload-text">Click to upload scoring template</div>
+                            <div class="upload-subtext">PDF, DOC, XLS, XLSX up to 10MB</div>
+                            <input type="file" id="scoringTemplate" class="hidden" accept=".pdf,.doc,.docx,.xls,.xlsx">
+                        </div>
+                        <div id="scoringTemplateSelected" class="file-selected"></div>
+                    </label>
+                </div>
+
+                <!-- Candidate CV -->
+                <div class="upload-section">
+                    <label class="material-textfield">
+                        <span>Candidate CV</span>
+                        <div class="upload-area" onclick="document.getElementById('candidateCV').click()">
+                            <div class="upload-icon">
+                                <span class="material-icons">description</span>
+                            </div>
+                            <div class="upload-text">Click to upload candidate CV</div>
+                            <div class="upload-subtext">PDF up to 10MB</div>
+                            <input type="file" id="candidateCV" class="hidden" accept=".pdf">
+                        </div>
+                        <div id="candidateCVSelected" class="file-selected"></div>
+                    </label>
+                </div>
+
+                <!-- Interview Transcript -->
+                <div class="upload-section">
+                    <label class="material-textfield">
+                        <span>Interview Transcript</span>
+                        <div class="upload-area" onclick="document.getElementById('interviewTranscript').click()">
+                            <div class="upload-icon">
+                                <span class="material-icons">mic</span>
+                            </div>
+                            <div class="upload-text">Upload transcript or audio</div>
+                            <div class="upload-subtext">TXT, PDF, MP3, WAV up to 25MB</div>
+                            <input type="file" id="interviewTranscript" class="hidden" accept=".txt,.pdf,.mp3,.wav">
+                        </div>
+                        <div id="interviewTranscriptSelected" class="file-selected"></div>
+                    </label>
+                    
+                    <div class="text-center mt-16 mb-16">
+                        <span style="color: #757575;">OR</span>
+                    </div>
+                    
+                    <label class="material-textfield">
+                        <span>Manual Transcript</span>
+                        <textarea 
+                            id="manualTranscript" 
+                            class="material-input"
+                            placeholder="Paste interview transcript here..."
+                            rows="4"
+                        ></textarea>
+                    </label>
+                </div>
+
+                <!-- Candidate Name -->
+                <div class="upload-section">
+                    <label class="material-textfield">
+                        <span>Candidate Name</span>
+                        <input 
+                            type="text" 
+                            id="candidateName" 
+                            class="material-input"
+                            placeholder="Enter candidate's full name"
+                        >
+                    </label>
+                </div>
+            </div>
+
+            <!-- Process Button -->
+            <div class="text-center mt-16">
+                <button 
+                    id="processBtn" 
+                    class="material-button elevation-2" 
+                    onclick="processAssessment()"
+                    disabled
+                >
+                    <span class="material-icons">psychology</span>
+                    Process with AI Assessment
+                </button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div id="progressContainer" class="progress-container">
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <div id="progressText" class="progress-text">Initializing assessment...</div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="results-section elevation-2">
+            <div class="results-header">
+                <div class="results-title">
+                    <span class="material-icons">analytics</span>
+                    <span>Assessment Results</span>
+                </div>
+                <button class="material-button outlined" onclick="exportToPDF()">
+                    <span class="material-icons">download</span>
+                    Export PDF
+                </button>
+            </div>
+
+            <!-- Candidate Summary -->
+            <div class="candidate-summary">
+                <h3 class="mb-16">Candidate Summary</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <h4>Name</h4>
+                        <p id="resultCandidateName">-</p>
+                    </div>
+                    <div class="summary-item">
+                        <h4>Overall Score</h4>
+                        <p id="resultOverallScore" class="score-large">-</p>
+                    </div>
+                    <div class="summary-item">
+                        <h4>Recommendation</h4>
+                        <p id="resultRecommendation">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Scoring and Analysis -->
+            <div class="scores-grid">
+                <div>
+                    <h3 class="mb-16">Detailed Scores</h3>
+                    <div id="detailedScores"></div>
+                </div>
+                
+                <div>
+                    <h3 class="mb-16">AI Analysis</h3>
+                    <div class="analysis-box">
+                        <p id="aiAnalysis">AI analysis will appear here after processing...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strengths and Weaknesses -->
+            <div class="insights-grid">
+                <div>
+                    <h3 class="insight-title">
+                        <span class="material-icons" style="color: var(--secondary);">thumb_up</span>
+                        Key Strengths
+                    </h3>
+                    <ul id="strengths" class="insight-list"></ul>
+                </div>
+                
+                <div>
+                    <h3 class="insight-title">
+                        <span class="material-icons" style="color: var(--accent);">warning</span>
+                        Areas for Improvement
+                    </h3>
+                    <ul id="weaknesses" class="insight-list"></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assessment History -->
+        <div class="material-card elevation-2">
+            <div class="results-header">
+                <div class="results-title">
+                    <span class="material-icons">history</span>
+                    <span>Recent Assessments</span>
+                </div>
+                <button class="material-button outlined">View All</button>
+            </div>
+
+            <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Candidate</th>
+                            <th class="desktop-only">Role</th>
+                            <th>Score</th>
+                            <th>Status</th>
+                            <th class="tablet-up">Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="assessmentHistory">
+                        <tr>
+                            <td colspan="6" class="text-center" style="color: #757575; padding: 32px;">
+                                No assessments yet. Upload your first candidate to get started!
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileNav = document.getElementById('mobileNav');
+            if (mobileNav.style.display === 'none' || !mobileNav.style.display) {
+                mobileNav.style.display = 'block';
+            } else {
+                mobileNav.style.display = 'none';
+            }
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileNav = document.getElementById('mobileNav');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            
+            if (!mobileNav.contains(event.target) && !menuBtn.contains(event.target)) {
+                mobileNav.style.display = 'none';
+            }
+        });
+
+        // Global state
+        let assessments = [];
+        let currentAssessment = null;
+
+        // File upload handlers
+        function setupFileUpload(inputId, displayId) {
+            const input = document.getElementById(inputId);
+            const display = document.getElementById(displayId);
+            
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    display.textContent = `✓ ${file.name}`;
+                    display.style.display = 'block';
+                    checkFormCompletion();
+                }
+            });
+        }
+
+        // Setup all file uploads
+        setupFileUpload('roleProfile', 'roleProfileSelected');
+        setupFileUpload('companyInfo', 'companyInfoSelected');
+        setupFileUpload('scoringTemplate', 'scoringTemplateSelected');
+        setupFileUpload('candidateCV', 'candidateCVSelected');
+        setupFileUpload('interviewTranscript', 'interviewTranscriptSelected');
+
+        // Form validation
+        function checkFormCompletion() {
+            const candidateName = document.getElementById('candidateName').value.trim();
+            const manualTranscript = document.getElementById('manualTranscript').value.trim();
+            const interviewFile = document.getElementById('interviewTranscript').files[0];
+            const roleProfile = document.getElementById('roleProfile').files[0];
+            const candidateCV = document.getElementById('candidateCV').files[0];
+            
+            const hasRequiredFiles = roleProfile && candidateCV && candidateName;
+            const hasInterview = interviewFile || manualTranscript;
+            
+            document.getElementById('processBtn').disabled = !(hasRequiredFiles && hasInterview);
+        }
+
+        // Event listeners
+        document.getElementById('candidateName').addEventListener('input', checkFormCompletion);
+        document.getElementById('manualTranscript').addEventListener('input', checkFormCompletion);
+
+        // Process assessment
+        async function processAssessment() {
+            const processBtn = document.getElementById('processBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            processBtn.disabled = true;
+            progressContainer.style.display = 'block';
+            
+            const steps = [
+                'Analyzing role profile...',
+                'Processing candidate CV...',
+                'Extracting key qualifications...',
+                'Generating AI assessment...',
+                'Calculating scores...',
+                'Finalizing results...'
+            ];
+            
+            for (let i = 0; i < steps.length; i++) {
+                progressText.textContent = steps[i];
+                progressFill.style.width = `${((i + 1) / steps.length) * 100}%`;
+                await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
+            }
+            
+            // Generate mock results
+            const candidateName = document.getElementById('candidateName').value;
+            const assessment = generateMockAssessment(candidateName);
+            
+            assessments.unshift(assessment);
+            currentAssessment = assessment;
+            
+            displayResults(assessment);
+            updateStats();
+            updateAssessmentHistory();
+            
+            progressContainer.style.display = 'none';
+            progressFill.style.width = '0%';
+            processBtn.disabled = false;
+            
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Generate mock assessment
+        function generateMockAssessment(candidateName) {
+            const scores = {
+                'Technical Skills': Math.floor(Math.random() * 30) + 70,
+                'Leadership': Math.floor(Math.random() * 40) + 60,
+                'Communication': Math.floor(Math.random() * 35) + 65,
+                'Problem Solving': Math.floor(Math.random() * 25) + 75,
+                'Cultural Fit': Math.floor(Math.random() * 30) + 70,
+                'Experience': Math.floor(Math.random() * 20) + 80
+            };
+            
+            const overallScore = Math.round(Object.values(scores).reduce((a, b) => a + b, 0) / Object.keys(scores).length);
+            
+            return {
+                id: Date.now(),
+                candidateName,
+                overallScore,
+                scores,
+                recommendation: overallScore >= 80 ? 'Highly Recommended' : overallScore >= 70 ? 'Recommended' : 'Consider',
+                strengths: [
+                    'Strong technical background with proven track record',
+                    'Excellent problem-solving abilities',
+                    'Great communication skills',
+                    'Leadership experience in similar roles'
+                ],
+                weaknesses: [
+                    'Limited experience in specific industry domain',
+                    'Could benefit from additional training in emerging technologies',
+                    'Needs to develop stronger stakeholder management skills'
+                ],
+                analysis: 'This candidate demonstrates strong technical capabilities and leadership potential. Their experience aligns well with the role requirements, particularly in areas of technical architecture and team management. The interview responses show good problem-solving approach and strategic thinking.',
+                date: new Date().toLocaleDateString(),
+                role: 'Senior Software Engineer'
+            };
+        }
+
+        // Display results
+        function displayResults(assessment) {
+            document.getElementById('resultCandidateName').textContent = assessment.candidateName;
+            document.getElementById('resultOverallScore').textContent = assessment.overallScore + '/100';
+            document.getElementById('resultRecommendation').textContent = assessment.recommendation;
+            
+            // Detailed scores
+            const scoresContainer = document.getElementById('detailedScores');
+            scoresContainer.innerHTML = '';
+            
+            Object.entries(assessment.scores).forEach(([category, score]) => {
+                const scoreDiv = document.createElement('div');
+                scoreDiv.className = 'score-item';
+                scoreDiv.innerHTML = `
+                    <div class="score-header">
+                        <span class="score-label">${category}</span>
+                        <span class="score-value">${score}/100</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-fill" style="width: ${score}%"></div>
+                    </div>
+                `;
+                scoresContainer.appendChild(scoreDiv);
+            });
+            
+            document.getElementById('aiAnalysis').textContent = assessment.analysis;
+            
+            // Strengths
+            const strengthsList = document.getElementById('strengths');
+            strengthsList.innerHTML = '';
+            assessment.strengths.forEach(strength => {
+                const li = document.createElement('li');
+                li.className = 'insight-item';
+                li.innerHTML = `
+                    <span class="material-icons" style="color: var(--secondary);">check</span>
+                    <span>${strength}</span>
+                `;
+                strengthsList.appendChild(li);
+            });
+            
+            // Weaknesses
+            const weaknessesList = document.getElementById('weaknesses');
+            weaknessesList.innerHTML = '';
+            assessment.weaknesses.forEach(weakness => {
+                const li = document.createElement('li');
+                li.className = 'insight-item';
+                li.innerHTML = `
+                    <span class="material-icons" style="color: var(--accent);">remove</span>
+                    <span>${weakness}</span>
+                `;
+                weaknessesList.appendChild(li);
+            });
+            
+            document.getElementById('resultsSection').style.display = 'block';
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalCandidates').textContent = assessments.length;
+            document.getElementById('assessedCandidates').textContent = assessments.length;
+            document.getElementById('pendingCandidates').textContent = '0';
+            
+            if (assessments.length > 0) {
+                const avgScore = Math.round(assessments.reduce((sum, a) => sum + a.overallScore, 0) / assessments.length);
+                document.getElementById('avgScore').textContent = avgScore;
+            }
+        }
+
+        // Update assessment history
+        function updateAssessmentHistory() {
+            const tbody = document.getElementById('assessmentHistory');
+            
+            if (assessments.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center" style="color: #757575; padding: 32px;">
+                            No assessments yet. Upload your first candidate to get started!
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            assessments.slice(0, 5).forEach(assessment => {
+                const row = document.createElement('tr');
+                
+                let statusClass = 'status-consider';
+                if (assessment.overallScore >= 80) statusClass = 'status-highly-recommended';
+                else if (assessment.overallScore >= 70) statusClass = 'status-recommended';
+                
+                row.innerHTML = `
+                    <td>${assessment.candidateName}</td>
+                    <td class="desktop-only">${assessment.role}</td>
+                    <td><strong style="color: var(--primary);">${assessment.overallScore}/100</strong></td>
+                    <td><span class="status-chip ${statusClass}">${assessment.recommendation}</span></td>
+                    <td class="tablet-up">${assessment.date}</td>
+                    <td>
+                        <button class="material-button outlined" onclick="viewAssessment(${assessment.id})" style="padding: 4px 8px; font-size: 12px;">
+                            <span class="material-icons" style="font-size: 16px;">visibility</span>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // View specific assessment
+        function viewAssessment(id) {
+            const assessment = assessments.find(a => a.id === id);
+            if (assessment) {
+                displayResults(assessment);
+                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Export to PDF
+        function exportToPDF() {
+            if (!currentAssessment) return;
+            alert(`PDF export would generate a comprehensive report for ${currentAssessment.candidateName} with all scores, analysis, and recommendations.`);
+        }
+
+        // Drag and drop functionality
+        document.querySelectorAll('.upload-area').forEach(area => {
+            area.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                area.classList.add('dragover');
+            });
+            
+            area.addEventListener('dragleave', () => {
+                area.classList.remove('dragover');
+            });
+            
+            area.addEventListener('drop', (e) => {
+                e.preventDefault();
+                area.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const input = area.querySelector('input[type="file"]');
+                    input.files = files;
+                    input.dispatchEvent(new Event('change'));
+                }
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+            updateAssessmentHistory();
+        });
+    </script>
+</body>
+</html>
