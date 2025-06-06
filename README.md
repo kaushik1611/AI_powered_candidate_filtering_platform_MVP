@@ -1,3 +1,7 @@
+
+![screencapture-onecompiler-html-43kxqwsh4-2025-06-06-15_38_24](https://github.com/user-attachments/assets/98f57cc9-6ac4-409a-8b98-a4289dcb1e71)
+
+
 # AI Candidate Assessment Platform
 
 > A comprehensive AI-powered candidate filtering and assessment platform for executive recruitment, built with Material Design principles and mobile-first responsive architecture.
